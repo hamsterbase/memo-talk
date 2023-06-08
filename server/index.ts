@@ -1,13 +1,15 @@
-import Koa from "koa";
 import Router from "@koa/router";
 import fs from "fs/promises";
-import path from "path";
+import Koa from "koa";
 import koaBody from "koa-body";
+import path from "path";
 
 const app = new Koa();
 const router = new Router();
 
 const DATA_FOLDER = "data";
+
+await fs.mkdir(DATA_FOLDER, { recursive: true });
 
 // 获取文件列表
 router.get("/public/api/v1/folder", async (ctx) => {
@@ -69,7 +71,10 @@ router.del("/public/api/v1/file", async (ctx) => {
 // 写入文件
 router.post(
   "/public/api/v1/file",
-  koaBody({ multipart: true, formidable: { maxFileSize: 1024 * 1024 } }),
+  koaBody.koaBody({
+    multipart: true,
+    formidable: { maxFileSize: 1024 * 1024 },
+  }),
   async (ctx) => {
     const { folder, file, content } = ctx.request.body;
     const filePath = path.join(DATA_FOLDER, folder, file);
@@ -88,6 +93,7 @@ router.post(
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-app.listen(3000, () => {
-  console.log("Server listening on port 3000");
+const port = 9999;
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
 });
