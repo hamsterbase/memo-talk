@@ -1,0 +1,18 @@
+{
+  "name": "memo-talk",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:hamsterbase/memo-talk.git",
+  "author": "monster <monster@hamsterbase.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@koa/router": "^12.0.0",
+    "@types/koa__router": "^12.0.0",
+    "koa": "^2.14.2",
+    "koa-body": "^6.0.1",
+    "koa-router": "^12.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.1.3"
+  }
+}
