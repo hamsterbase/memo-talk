@@ -13,7 +13,7 @@ const DATA_FOLDER = "data";
 await fs.mkdir(DATA_FOLDER, { recursive: true });
 
 // 获取文件列表
-router.get("/public/api/v1/folder", async (ctx) => {
+router.post("/public/api/v1/folder", async (ctx) => {
   try {
     const { folder } = ctx.request.body;
 
