@@ -3,6 +3,7 @@ import fs from "fs/promises";
 import Koa from "koa";
 import koaBody from "koa-body";
 import path from "path";
+import { validateName } from "./validate-name.js";
 
 const app = new Koa();
 const router = new Router();
@@ -13,9 +14,10 @@ await fs.mkdir(DATA_FOLDER, { recursive: true });
 
 // 获取文件列表
 router.get("/public/api/v1/folder", async (ctx) => {
-  const { folder } = ctx.request.body;
-  const folderPath = path.join(DATA_FOLDER, folder);
   try {
+    const { folder } = ctx.request.body;
+
+    const folderPath = path.join(DATA_FOLDER, validateName(folder));
     const files = await fs.readdir(folderPath);
     ctx.body = files;
   } catch (err) {
@@ -33,7 +35,11 @@ router.get("/public/api/v1/folder", async (ctx) => {
 // 获取文件内容
 router.get("/public/api/v1/file", async (ctx) => {
   const { folder, file } = ctx.request.body;
-  const filePath = path.join(DATA_FOLDER, folder, file);
+  const filePath = path.join(
+    DATA_FOLDER,
+    validateName(folder),
+    validateName(file)
+  );
   try {
     const fileContent = await fs.readFile(filePath, "utf-8");
     ctx.body = fileContent;
@@ -52,7 +58,11 @@ router.get("/public/api/v1/file", async (ctx) => {
 // 删除文件
 router.del("/public/api/v1/file", async (ctx) => {
   const { folder, file } = ctx.request.body;
-  const filePath = path.join(DATA_FOLDER, folder, file);
+  const filePath = path.join(
+    DATA_FOLDER,
+    validateName(folder),
+    validateName(file)
+  );
   try {
     await fs.unlink(filePath);
     ctx.body = "File Deleted";
@@ -77,9 +87,15 @@ router.post(
   }),
   async (ctx) => {
     const { folder, file, content } = ctx.request.body;
-    const filePath = path.join(DATA_FOLDER, folder, file);
+    const filePath = path.join(
+      DATA_FOLDER,
+      validateName(folder),
+      validateName(file)
+    );
     try {
-      await fs.mkdir(path.join(DATA_FOLDER, folder), { recursive: true });
+      await fs.mkdir(path.join(DATA_FOLDER, validateName(folder)), {
+        recursive: true,
+      });
       await fs.writeFile(filePath, content);
       ctx.body = "File Created";
     } catch (err) {
