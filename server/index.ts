@@ -35,7 +35,7 @@ router.post("/public/api/v1/folder", async (ctx) => {
   } catch (err) {
     if (err.code === "ENOENT") {
       ctx.status = 404;
-      ctx.body = "Folder Not Found";
+      ctx.body = err.message;
     } else {
       ctx.status = 500;
       ctx.body = "Internal Server Error";
